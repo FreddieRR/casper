@@ -1,0 +1,48 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Personal data (never commit) ---
+data/*
+!data/.gitkeep
+evals/datasets/private/*
+!evals/datasets/private/.gitkeep
+evals/results/*.local.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Terraform (state holds secrets; it lives in S3, never Git) ---
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# --- Docker volumes / local databases ---
+volumes/
+pgdata/
+langfuse-data/
+*.sqlite
+*.sqlite3
+*.db
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store

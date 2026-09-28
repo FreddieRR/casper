@@ -1,0 +1,50 @@
+# Casper local services.
+# Credentials come from .env (copy .env.example to .env first: `make setup` does this).
+#
+# Ollama is NOT in this file: it runs natively on the host for simpler GPU access.
+# Containers reach it via OLLAMA_BASE_URL (working out the right host address is part of Day 11).
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # Bound to localhost only, so the database is never exposed on your network.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # api (week 3, Day 11): the FastAPI answering service, built from your own Dockerfile.
+  # api:
+  #   build: .
+  #   env_file: .env
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   ports:
+  #     - "127.0.0.1:8000:8000"
+
+  # langfuse (week 7, Day 32): self-hosted LLM tracing. Follow the Langfuse self-hosting
+  # guide; it needs its own Postgres database (and possibly other services).
+  # langfuse:
+  #   image: langfuse/langfuse
+
+  # prometheus (week 7, Day 33): scrapes /metrics; config lives in infra/prometheus/.
+  # prometheus:
+  #   image: prom/prometheus
+
+  # grafana (week 7, Day 33): dashboards; exported dashboard JSON lives in infra/grafana/.
+  # grafana:
+  #   image: grafana/grafana
+
+volumes:
+  pgdata:
