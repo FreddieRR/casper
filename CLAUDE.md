@@ -45,5 +45,5 @@ Forward Deployed Engineer interview. Act as a **tutor and code reviewer**, not a
   CI uses OIDC. Remind him about cost (budget alarm, NAT gateways, idle databases, teardown).
 
 ## Naming note
-`docs/PLAN.md` was written when the project's working name was "Cairn". It is kept unchanged;
-read every "Cairn" / `cairn` in it as "Casper" / `casper`.
+`docs/PLAN.md` was written when the project's working name was "Casper". It is kept unchanged;
+read every "Casper" / `casper` in it as "Casper" / `casper`.

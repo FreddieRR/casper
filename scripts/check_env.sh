@@ -20,6 +20,9 @@ if [ -r /etc/os-release ]; then
   # shellcheck disable=SC1091
   printf '%-10s %s\n' "distro" "$(. /etc/os-release && echo "$PRETTY_NAME")"
 fi
+if grep -qi microsoft /proc/version 2>/dev/null; then
+  printf '%-10s %s\n' "wsl" "yes (running inside WSL)"
+fi
 
 show "git" git --version
 show "uv" uv --version

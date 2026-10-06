@@ -1,6 +1,6 @@
 # Introduction to Casper
 
-> A note on naming: [PLAN.md](PLAN.md) was written when the project was called "Cairn". Read every "Cairn" there as "Casper".
+> A note on naming: [PLAN.md](PLAN.md) was written when the project was called "Casper". Read every "Casper" there as "Casper".
 
 ## What Casper is
 

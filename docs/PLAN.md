@@ -1,4 +1,4 @@
-# Start here: building Cairn in 9 weeks
+# Start here: building Casper in 9 weeks
 
 *Your guide, reading list and day-by-day plan. Once Claude Code scaffolds the repo, this file lives at `docs/PLAN.md`.*
 
@@ -6,7 +6,7 @@
 
 ## 1. What you're building, in plain English
 
-Cairn is a **private "ask my documents" assistant that shows its receipts**. You point it at your Obsidian vault and a folder of PDFs. You ask, "What did I decide about the battery charge limit on the laptop?" or "What's the excess on my travel insurance?", and it answers in a sentence or two with links to the exact note and heading it used. If the answer isn't in your documents, it says so rather than making something up.
+Casper is a **private "ask my documents" assistant that shows its receipts**. You point it at your Obsidian vault and a folder of PDFs. You ask, "What did I decide about the battery charge limit on the laptop?" or "What's the excess on my travel insurance?", and it answers in a sentence or two with links to the exact note and heading it used. If the answer isn't in your documents, it says so rather than making something up.
 
 Behind that simple experience sit the things that make it a professional system rather than a weekend demo:
 
@@ -20,7 +20,7 @@ Behind that simple experience sit the things that make it a professional system 
 
 1. **Hybrid local + cloud instead of local-only.** Real customer deployments are almost never purely one or the other. The interesting engineering, and the best interview material, is the routing policy: privacy vs quality vs cost vs availability.
 2. **You are customer number one.** Using it on your own vault every day gives you real feedback and makes it genuinely useful. A real external user arrives in week 9, when the system is solid enough to deploy for them.
-3. **MCP is a first-class interface.** It's how AI companies' customers connect models to their data today, so it's directly relevant to FDE roles, and it means you'll use Cairn from Claude without building a fancy UI.
+3. **MCP is a first-class interface.** It's how AI companies' customers connect models to their data today, so it's directly relevant to FDE roles, and it means you'll use Casper from Claude without building a fancy UI.
 4. **LLM-native tracing (Langfuse) plus infrastructure metrics (Prometheus/Grafana).** Debugging *why an answer was bad* is a different skill from checking a server is up. You'll learn both.
 5. **Evaluations run in CI (continuous integration).** A change that makes answers worse fails the build. Very few side projects do this.
 6. **Hardware confirmed: RTX 5070 Ti laptop GPU, 12 GB VRAM (video memory).** Comfortable for 7–14B-parameter models at 4-bit. It's a Blackwell-generation chip, so you need a recent NVIDIA driver and a recent Ollama/CUDA stack; older guides may not apply.
@@ -32,7 +32,7 @@ Behind that simple experience sit the things that make it a professional system 
 
 FDEs sit between the product and the customer. Interviewers want evidence you can:
 
-| What they look for | Where Cairn proves it |
+| What they look for | Where Casper proves it |
 |---|---|
 | Understand a user's real problem | Discovery interview and golden dataset built with tenant #2 |
 | Integrate with messy data | Obsidian markdown, PDFs, incremental sync |
@@ -82,12 +82,12 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 
 ## 5. Kicking off with Claude Code
 
-1. Make an empty folder (e.g. `~/Projects/cairn`), put `CLAUDE_CODE_BRIEF.md` and this file inside, run `git init`.
+1. Make an empty folder (e.g. `~/Projects/casper`), put `CLAUDE_CODE_BRIEF.md` and this file inside, run `git init`.
 2. Start `claude` in that folder and say: *"Read CLAUDE_CODE_BRIEF.md and follow it."*
 3. Answer its three questions. It will scaffold the repo, docs and tooling, and create a `CLAUDE.md` that keeps future sessions in **tutor mode**: it'll explain, hint and review, but won't write the core code unless you explicitly ask.
 4. Open `docs/PLAN.md` (this file) and start Week 1, Day 1.
 
-**Using Claude well while learning.** The temptation will be to say "just write it". Resist it for anything in `src/cairn/`. A good pattern: try for 20 minutes → ask Claude for a *hint* → try again → ask for a *review*. If you do ask it to write something, make it explain every line and then rewrite it yourself from memory. You want to be the person in the interview who can go three levels deep on any part of the system.
+**Using Claude well while learning.** The temptation will be to say "just write it". Resist it for anything in `src/casper/`. A good pattern: try for 20 minutes → ask Claude for a *hint* → try again → ask for a *review*. If you do ask it to write something, make it explain every line and then rewrite it yourself from memory. You want to be the person in the interview who can go three levels deep on any part of the system.
 
 ---
 
@@ -125,17 +125,20 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 **Learn**
 - Tailscale quickstart: tailscale.com/kb/1017/install
 - uv docs, "Getting started": docs.astral.sh/uv
-- If going Linux: Ubuntu Desktop 24.04 LTS install guide (ubuntu.com/tutorials/install-ubuntu-desktop); asus-linux.org for the ASUS tooling and NVIDIA driver notes.
+- WSL install guide: learn.microsoft.com/windows/wsl/install, plus "Advanced settings configuration" (`.wslconfig`, networking modes, idle timeout) and "Working across file systems".
+- NVIDIA's "CUDA on WSL User Guide" (docs.nvidia.com/cuda/wsl-user-guide).
+- Docker Desktop's "WSL 2 backend" page (docs.docker.com/desktop/features/wsl).
 
 **Do**
-- Decide: **Ubuntu on the laptop** or **Windows + WSL2 (Windows Subsystem for Linux)**. Write your reasoning down; it becomes ADR-0002 on Friday.
-- Install: NVIDIA driver, Docker (plus the NVIDIA Container Toolkit if on Linux), Git, uv, Tailscale (on the laptop *and* your main computer/phone).
+- Decided: **Windows + WSL2** (keeping Windows for gaming). Write down why, and what you're giving up; it becomes ADR-0002 on Friday.
+- Install: NVIDIA driver (on Windows only; read the CUDA on WSL guide to see why), WSL2 with Ubuntu 24.04, Docker, Git, uv, Ollama, Tailscale (on the laptop *and* your main computer/phone). Decide for each tool whether it lives on the Windows side or inside WSL, and note why.
+- Clone the repo inside the WSL filesystem, not under `/mnt/c`.
 - Run `nvidia-smi` and note the **GPU model and total VRAM**. This number governs every model choice.
 - Set the battery charge limit and lid-close behaviour.
 - SSH into the laptop from your main computer over Tailscale. From now on you can develop from your main machine (VS Code's "Remote - SSH" extension works nicely) and run things on the laptop.
 - Do the Claude Code kick-off from section 5 (on either machine).
 
-**Quick explainer: my recommendation.** Since the laptop is spare, a clean Ubuntu install is the better learning experience: real servers run Linux, GPU containers are simpler, and you'll pick up systemd, SSH and firewall basics that come up constantly in FDE work. WSL2 is the right call if you want to keep Windows for anything.
+**Quick explainer: what to watch on Windows + WSL2.** The laptop is now a gaming machine *and* a server, so ask yourself: what happens to Casper when you launch a game (VRAM), when Windows Update reboots, when no-one is logged in, and when WSL decides it's idle? How do you SSH (secure shell) into WSL rather than into Windows? These are good ADR-0002 material, and "the GPU is busy gaming" is a real-life test of the graceful-degradation feature in week 5.
 
 **Check yourself**
 - What's your VRAM, and why does it matter more than system RAM for running models?
@@ -206,7 +209,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 
 ## Week 2: Ingestion and storage, done properly
 
-**Goal by Friday:** `cairn ingest` reads your whole vault into Postgres, chunked sensibly, re-runs only process changed files, and you can query it with SQL.
+**Goal by Friday:** `casper ingest` reads your whole vault into Postgres, chunked sensibly, re-runs only process changed files, and you can query it with SQL.
 
 ### Day 6: Postgres + pgvector and your schema
 **Learn**
@@ -259,9 +262,9 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 - Look up "idempotency" and "content-addressable hashing" (a short blog post is enough).
 
 **Do**
-- Hash each file's content. On `cairn ingest`: new files get added, changed files get re-chunked and re-embedded, deleted files get removed, unchanged files are skipped.
+- Hash each file's content. On `casper ingest`: new files get added, changed files get re-chunked and re-embedded, deleted files get removed, unchanged files are skipped.
 - Wrap each document's update in a transaction so a crash can't leave half a document.
-- Add the `cairn ingest` CLI command with a summary: added/updated/deleted/skipped, time taken.
+- Add the `casper ingest` CLI command with a summary: added/updated/deleted/skipped, time taken.
 - Time a full ingest of your vault and a no-change re-run.
 
 **Check yourself**
@@ -294,7 +297,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 
 **Do**
 - Build the API skeleton: `/health` (checks the database and Ollama are reachable), configuration from environment variables, a database connection shared across requests.
-- Write a Dockerfile for the API (simple for now; you'll harden it in week 8) and add the `api` service to Docker Compose (Ollama stays on the host; work out how a container reaches the host).
+- Write a Dockerfile for the API (simple for now; you'll harden it in week 8) and add the `api` service to Docker Compose (Ollama stays on the host; work out how a container reaches the host, which depends on where Ollama runs in your WSL2 setup).
 - Write a test for `/health` using FastAPI's test client.
 
 **Check yourself**
@@ -334,7 +337,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 
 **Do**
 - Add `/ask` streaming tokens via SSE (server-sent events), with citations sent as a final event.
-- Build `cairn ask "question"` in the CLI that renders the stream.
+- Build `casper ask "question"` in the CLI that renders the stream.
 - Measure time-to-first-token vs total time.
 
 **Quick explainer: why stream.** Users judge speed by when text *starts* appearing. A 6-second answer that starts after 400 ms feels fast; one that appears all at once after 6 seconds feels broken. Time-to-first-token is a metric you'll put on your dashboard.
@@ -478,7 +481,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 - OWASP cheat sheet on password storage, for why you hash API keys.
 
 **Do**
-- API keys per client (web UI, CLI, MCP server, tenant), stored hashed, with a `cairn keys create` command.
+- API keys per client (web UI, CLI, MCP server, tenant), stored hashed, with a `casper keys create` command.
 - Token-bucket rate limiting per key.
 - Tests for: missing key, bad key, rate limit exceeded.
 
@@ -501,7 +504,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 
 ## Week 6: MCP, agents, security and daily use
 
-**Goal by Friday:** Cairn works inside Claude Desktop/Claude Code via your MCP server, can do multi-step searches, survives your prompt-injection tests, and you're using it daily from your phone.
+**Goal by Friday:** Casper works inside Claude Desktop/Claude Code via your MCP server, can do multi-step searches, survives your prompt-injection tests, and you're using it daily from your phone.
 
 ### Day 26: MCP concepts and your server
 **Learn**
@@ -557,7 +560,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 
 ### Day 30: Daily-use polish + review
 **Do**
-- Set up a watched "inbox" folder: drop a PDF in, it's ingested automatically (a scheduled `cairn ingest` is fine).
+- Set up a watched "inbox" folder: drop a PDF in, it's ingested automatically (a scheduled `casper ingest` is fine).
 - Make the web UI a comfortable phone experience over Tailscale (add-to-home-screen, sensible font sizes).
 - Friday admin: ADRs (MCP design, security posture), learning log, README (add MCP usage instructions), commit.
 
@@ -611,7 +614,7 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 **Quick explainer: percentiles.** p95 latency = 95% of requests were faster than this. Averages hide the slow tail that users actually complain about; p95/p99 expose it.
 
 **Check yourself**
-- What are the four golden signals, and what's each one for Cairn?
+- What are the four golden signals, and what's each one for Casper?
 
 ### Day 34: Load testing and capacity
 **Learn**
@@ -637,13 +640,13 @@ Don't buy a GPU. If you ever outgrow the laptop, a used 24 GB desktop card is th
 - Friday admin: ADRs, learning log, README, commit.
 
 **Check yourself**
-- Could someone else operate Cairn using only your runbook? Ask a friend to read it.
+- Could someone else operate Casper using only your runbook? Ask a friend to read it.
 
 ---
 
 ## Week 8: Deploying into "a customer's cloud" on AWS
 
-**Why this week exists.** FDEs rarely deploy onto their own hardware; they deploy into the customer's environment, very often their AWS (Amazon Web Services) account. This week you build a second, cloud-hosted Cairn environment with Terraform (infrastructure as code), using Claude via Amazon Bedrock as the model. Your home instance stays as it is. Tenant #2 lives here in week 9.
+**Why this week exists.** FDEs rarely deploy onto their own hardware; they deploy into the customer's environment, very often their AWS (Amazon Web Services) account. This week you build a second, cloud-hosted Casper environment with Terraform (infrastructure as code), using Claude via Amazon Bedrock as the model. Your home instance stays as it is. Tenant #2 lives here in week 9.
 
 **Goal by Friday:** `terraform apply` builds the whole AWS environment from nothing, CI ships your container images to it, it passes your eval suite, and `terraform destroy` removes it cleanly. You know what it costs per month.
 

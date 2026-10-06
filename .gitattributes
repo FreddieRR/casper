@@ -1,0 +1,4 @@
+# Store text files with LF line endings, whatever OS they were edited on.
+# Stops Windows-side editors or Git from turning shell scripts into CRLF, which breaks them in WSL/Linux/CI.
+* text=auto eol=lf
+*.sh text eol=lf

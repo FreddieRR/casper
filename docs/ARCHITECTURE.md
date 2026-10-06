@@ -83,7 +83,7 @@ This document describes what each component is *responsible for*, not how it is 
 
 | ADR | Decision | Plan day |
 |---|---|---|
-| 0002 | Ubuntu on the laptop vs Windows + WSL2 (Windows Subsystem for Linux) | Day 1 / Day 5 |
+| 0002 | OS on the laptop: Windows + WSL2 (Windows Subsystem for Linux), kept for gaming, rather than Ubuntu | Day 1 / Day 5 |
 | 0003 | Database schema; ORM (object-relational mapper) vs raw SQL | Day 6 / Day 10 |
 | 0004 | Postgres + pgvector vs a dedicated vector database | Day 6 |
 | 0005 | Chunking strategy and sizes | Day 8 / Day 10 |

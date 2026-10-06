@@ -1,8 +1,8 @@
-# Project brief for Claude Code: "Cairn" (working name)
+# Project brief for Claude Code: "Casper" (working name)
 
 > **How Freddie uses this file:** create an empty folder, put this file and `START_HERE.md` in it, run `git init`, start `claude` in that folder and say: *"Read CLAUDE_CODE_BRIEF.md and follow it."*
 >
-> "Cairn" is a placeholder name (a cairn is a pile of stones marking a path, which fits a system that marks where knowledge lives). Ask Freddie if he wants a different name before creating anything.
+> "Casper" is a placeholder name (a casper is a pile of stones marking a path, which fits a system that marks where knowledge lives). Ask Freddie if he wants a different name before creating anything.
 
 ---
 
@@ -30,7 +30,7 @@ Freddie is building this project **to learn**. He wants to understand every part
 
 ## 2. The project in one paragraph
 
-Cairn is a **self-hosted, private AI knowledge assistant** that answers questions over a person's or organisation's documents (an Obsidian vault, PDFs, notes) with **cited answers**. It runs on hardware Freddie owns, routes each request to either a **local model** (Ollama on his GPU laptop) or a **cloud model** (Claude API) according to a privacy/cost/availability policy, and exposes itself through an **MCP server** (so it plugs straight into Claude Desktop and Claude Code), a small web UI and a CLI (command-line interface). It is **measured** (an evaluation harness running in CI), **observable** (traces of every request plus infrastructure dashboards), **secure** (per-tenant isolation, prompt-injection tests, no public exposure) and **multi-tenant**: Freddie is tenant #1 and uses it daily; in week 8 he builds a second environment on **AWS** with Terraform (Claude via Amazon Bedrock as the model), and in week 9 onboards a **real external user** onto it as tenant #2 using a written deployment playbook.
+Casper is a **self-hosted, private AI knowledge assistant** that answers questions over a person's or organisation's documents (an Obsidian vault, PDFs, notes) with **cited answers**. It runs on hardware Freddie owns, routes each request to either a **local model** (Ollama on his GPU laptop) or a **cloud model** (Claude API) according to a privacy/cost/availability policy, and exposes itself through an **MCP server** (so it plugs straight into Claude Desktop and Claude Code), a small web UI and a CLI (command-line interface). It is **measured** (an evaluation harness running in CI), **observable** (traces of every request plus infrastructure dashboards), **secure** (per-tenant isolation, prompt-injection tests, no public exposure) and **multi-tenant**: Freddie is tenant #1 and uses it daily; in week 8 he builds a second environment on **AWS** with Terraform (Claude via Amazon Bedrock as the model), and in week 9 onboards a **real external user** onto it as tenant #2 using a written deployment playbook.
 
 ---
 
@@ -155,7 +155,7 @@ Deliberately left for Freddie to decide and record as ADRs (do not decide for hi
 Create exactly this structure (adjust the package name if Freddie renames the project):
 
 ```
-cairn/
+casper/
 ├── CLAUDE.md
 ├── README.md
 ├── LICENSE                      # MIT
@@ -183,7 +183,7 @@ cairn/
 │   └── learning-log/
 │       ├── README.md
 │       └── template.md
-├── src/cairn/
+├── src/casper/
 │   ├── __init__.py              # __version__ only
 │   ├── cli.py                   # only a `--version` command so CI has something to run
 │   ├── config.py                # docstring + TODO only
@@ -225,7 +225,7 @@ cairn/
 - A "Status: week 0 of 8" line Freddie will update.
 
 **`docs/INTRODUCTION.md`** (for Freddie and any reader)
-- What Cairn is in plain English (a private "ask my documents" assistant with receipts).
+- What Casper is in plain English (a private "ask my documents" assistant with receipts).
 - A worked example: the journey of one question from typing it to getting a cited answer, stage by stage, in simple language.
 - What each folder is for.
 - How the learning workflow works: PLAN → learning log → ADRs → experiments.
@@ -235,7 +235,7 @@ cairn/
 
 **`docs/GLOSSARY.md`**: plain-English definitions, one or two sentences each, of: LLM, token, context window, quantisation, VRAM, embedding, vector, cosine similarity, chunk, vector database, HNSW, BM25/full-text search, hybrid search, reciprocal rank fusion, reranker, RAG, grounding, hallucination, citation, prompt injection, golden dataset, recall@k, MRR, faithfulness, LLM-as-judge, MCP, tool use, agent, gateway, rate limiting, token bucket, SSE (server-sent events), OpenTelemetry, trace, span, p50/p95 latency, tenant, ADR, runbook, container image, multi-stage build, infrastructure as code, Terraform state, VPC, IAM role, OIDC, ECR, ECS/Fargate, RDS, Amazon Bedrock.
 
-**Module `README.md` files** (one per `src/cairn/*` package), each containing:
+**Module `README.md` files** (one per `src/casper/*` package), each containing:
 - *Responsibility:* one paragraph.
 - *Built in:* the week/days from `docs/PLAN.md`.
 - *Concepts to understand first:* bullet list linking to GLOSSARY entries.
@@ -253,7 +253,7 @@ cairn/
 
 **`docs/learning-log/template.md`**: Date, Plan day, What I did, What I learned (in my own words), What confused me, Questions for next time, Link to commits.
 
-**`pyproject.toml`**: project metadata, `requires-python >=3.12`, a `cairn` console script pointing at `cairn.cli:main`, dev dependency group with `ruff`, `pytest`, `pre-commit`. Do **not** add runtime AI dependencies yet; Freddie adds each one when he reaches it, so he knows why it is there.
+**`pyproject.toml`**: project metadata, `requires-python >=3.12`, a `casper` console script pointing at `casper.cli:main`, dev dependency group with `ruff`, `pytest`, `pre-commit`. Do **not** add runtime AI dependencies yet; Freddie adds each one when he reaches it, so he knows why it is there.
 
 **`Makefile`** targets: `setup`, `lint`, `format`, `test`, `up`, `down`, `logs`, `psql`, `check-env`, `eval` (prints "not implemented yet: week 4").
 
@@ -263,7 +263,7 @@ cairn/
 
 **`.gitignore`**: Python defaults, `.env`, `*.tfstate*`, `.terraform/`, `*.tfvars` (keep a `*.tfvars.example`), `data/*` (keep `.gitkeep`), `evals/datasets/private/*` (keep `.gitkeep`), `evals/results/*.local.*`, IDE files, Docker volumes, `*.sqlite`, `.DS_Store`.
 
-**`.env.example`**: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `DATABASE_URL`, `OLLAMA_BASE_URL`, `ANTHROPIC_API_KEY=`, `CAIRN_VAULT_PATH=`, `CAIRN_ENV=dev`, with comments.
+**`.env.example`**: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `DATABASE_URL`, `OLLAMA_BASE_URL`, `ANTHROPIC_API_KEY=`, `CASPER_VAULT_PATH=`, `CASPER_ENV=dev`, with comments.
 
 **`CLAUDE.md`**: exactly the content in section 10 (adapt the project name if changed).
 
@@ -274,15 +274,15 @@ After creating files: run `uv sync`, `make lint`, `make test`, `docker compose u
 ## 10. Content for `CLAUDE.md`
 
 ```markdown
-# CLAUDE.md: how to work with Freddie on Cairn
+# CLAUDE.md: how to work with Freddie on Casper
 
 ## The most important rule
-Freddie is building Cairn to learn AI engineering and to be able to explain every line in a
+Freddie is building Casper to learn AI engineering and to be able to explain every line in a
 Forward Deployed Engineer interview. Act as a **tutor and code reviewer**, not a code generator.
 
 ## Default behaviour
 - Before helping, check `docs/PLAN.md` and ask which week/day Freddie is on if unclear.
-- Do NOT write implementation code in `src/cairn/` (ingest, store, retrieval, generation,
+- Do NOT write implementation code in `src/casper/` (ingest, store, retrieval, generation,
   gateway, api, mcp_server, observability) or in `evals/runners/` unless Freddie explicitly
   says "write it for me" or "just do it".
 - Instead, use escalating help: (1) ask what he thinks and why, (2) explain the concept with a
@@ -334,6 +334,6 @@ Forward Deployed Engineer interview. Act as a **tutor and code reviewer**, not a
 
 ## 12. Ask Freddie these before creating anything
 
-1. Keep the name "Cairn", or choose another?
+1. Keep the name "Casper", or choose another?
 2. Which machine is this session running on (his main computer or the G14)? If the G14: is it on Windows, WSL2 or Ubuntu? (If he hasn't decided, the plan covers this on Day 1; scaffold anyway, it's OS-independent.)
 3. Public or private GitHub repository?
